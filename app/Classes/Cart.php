@@ -1,13 +1,14 @@
 <?php
-session_start();
+//session_start();
 namespace App\Classes;
-
+session_start();
 class Cart
 {
     protected $cart_contents = array();
 
     public function __construct()
     {
+        
         // get the shopping cart array from the session
         $this->cart_contents = !empty($_SESSION['cart_contents']) ? $_SESSION['cart_contents'] : null;
         if ($this->cart_contents === null) {

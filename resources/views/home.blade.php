@@ -17,31 +17,28 @@
     <h1>Products</h1>
     <a href="viewCart.php" class="cart-link" title="View Cart"><i class="glyphicon glyphicon-shopping-cart"></i></a>
     <div id="products" class="row list-group">
-        <?php
-        //get rows query
-        $query = $db->query("SELECT * FROM products ORDER BY id DESC LIMIT 10");
-        if($query->num_rows > 0){ 
-            while($row = $query->fetch_assoc()){
-        ?>
+        @if(count('products')>0)
+        @foreach($products as $item)
         <div class="item col-lg-4">
             <div class="thumbnail">
                 <div class="caption">
-                    <h4 class="list-group-item-heading"><?php echo $row["name"]; ?></h4>
-                    <p class="list-group-item-text"><?php echo $row["description"]; ?></p>
+                    <h4 class="list-group-item-heading">{{$item->name}}</h4>
+                    <p class="list-group-item-text">{{$item->description}}</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <p class="lead"><?php echo '$'.$row["price"].' USD'; ?></p>
+                            <p class="lead">{{Helper::product_price($item->price)}}</p>
                         </div>
                         <div class="col-md-6">
-                            <a class="btn btn-success" href="cartAction.php?action=addToCart&id=<?php echo $row["id"]; ?>">Add to cart</a>
+                            <a class="btn btn-success" href="{{url('mua-hang',[$item->id,Helper::convert2Alias($item->name)])}}">Add to cart</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php } }else{ ?>
+        @endforeach
+        @else
         <p>Product(s) not found.....</p>
-        <?php } ?>
+        @endif
     </div>
 </div>
 </body>

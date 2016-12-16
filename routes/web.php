@@ -13,3 +13,4 @@
 
 Route::get('/', 'HomeController@index');
 Route::get('mua-hang/{id}/{tensanpham}', ['as' => 'muahang', 'uses' => 'HomeController@muahang']);
+Route::get('gio-hang', ['as' => 'giohang', 'uses' => 'HomeController@giohang']);
