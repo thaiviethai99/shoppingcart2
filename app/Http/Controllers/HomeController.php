@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Classes\Cart;
 use App\Models\Product;
+use App\Order;
+use App\Order_Item;
 use DB;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -48,23 +51,54 @@ class HomeController extends Controller
         return redirect()->route('giohang');
     }
 
-    public function capnhatgiohang(Request $request,$id,$qty)
+    public function capnhatgiohang(Request $request, $id, $qty)
     {
         if ($request->ajax()) {
-            
+
             $itemData = array(
                 'rowid' => $id,
-                'qty'   => $qty
+                'qty'   => $qty,
             );
             $updateItem = $this->cart->update($itemData);
             echo $updateItem ? 'ok' : 'err';die;
         }
     }
-    
-    public function checkout(){
+
+    public function checkout()
+    {
         $_SESSION['sessCustomerID'] = 1;
-        $custRow = DB::table('customers')->where('id',$_SESSION['sessCustomerID'])->get()->first();
+        $custRow                    = DB::table('customers')->where('id', $_SESSION['sessCustomerID'])->get()->first();
         //print_r($custRow);
-        return view('checkout',compact('custRow'));
+        return view('checkout', compact('custRow'));
+    }
+
+    public function placeOrder()
+    {
+        if ($this->cart->total_items() > 0 && !empty($_SESSION['sessCustomerID'])) {
+            $order              = new Order;
+            $order->customer_id = $_SESSION['sessCustomerID'];
+            $order->total_price = $this->cart->total();
+            $save               = $order->save();
+            if ($save) {
+                $orderID   = $order->id;
+                $cartItems = $this->cart->contents();
+                foreach ($cartItems as $item) {
+                    $order_item = new Order_Item;
+                    $order_item->order_id = $orderID;
+                    $order_item->product_id = $item['id'];
+                    $order_item->quantity = $item['qty'];
+                    $save = $order_item->save();
+                }
+                $this->cart->destroy();
+                return redirect()->route('orderSuccess');
+            }
+            else {
+                return redirect()->route('giohang');
+            }
+        }
+    }
+
+    public function orderSuccess(){
+        echo 'Them don hang thanh cong';
     }
 }

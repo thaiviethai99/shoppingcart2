@@ -77,7 +77,7 @@ $_SESSION['sessCustomerID'] = 1;
     </div>
     <div class="footBtn">
         <a href="index.php" class="btn btn-warning"><i class="glyphicon glyphicon-menu-left"></i> Continue Shopping</a>
-        <a href="cartAction.php?action=placeOrder" class="btn btn-success orderBtn">Place Order <i class="glyphicon glyphicon-menu-right"></i></a>
+        <a href="{{url('placeOrder')}}" class="btn btn-success orderBtn">Place Order <i class="glyphicon glyphicon-menu-right"></i></a>
     </div>
 </div>
 </body>
