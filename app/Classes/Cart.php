@@ -95,7 +95,8 @@ class Cart
                 $item['rowid'] = $rowid;
                 $item['qty'] += $old_qty;
                 $this->cart_contents[$rowid] = $item;
-
+                //print_r($this->cart_contents);
+                //die();
                 // save Cart Item
                 if ($this->save_cart()) {
                     return isset($rowid) ? $rowid : true;
@@ -163,7 +164,8 @@ class Cart
             $this->cart_contents['total_items'] += $val['qty'];
             $this->cart_contents[$key]['subtotal'] = ($this->cart_contents[$key]['price'] * $this->cart_contents[$key]['qty']);
         }
-
+        //print_r($this->cart_contents);
+        //die();
         // if cart empty, delete it from the session
         if (count($this->cart_contents) <= 2) {
             unset($_SESSION['cart_contents']);

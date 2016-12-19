@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Classes\Cart;
+use App\Models\Product;
 use DB;
 
 class HomeController extends Controller
 {
-	var $cart;
-	public function __construct(){
-		$this->cart = new Cart();
-	}
+    public $cart;
+    public function __construct()
+    {
+        $this->cart = new Cart();
+    }
 
     public function index()
     {
@@ -22,7 +24,7 @@ class HomeController extends Controller
     {
         $productID = $id;
         // get product details
-        $product = Product::find($id)->toArray();
+        $product  = Product::find($id)->toArray();
         $itemData = array(
             'id'    => $product['id'],
             'name'  => $product['name'],
@@ -35,7 +37,34 @@ class HomeController extends Controller
         return redirect()->route($redirectLoc);
     }
 
-    public function giohang(){
-    	return view('giohang', compact('products'));
+    public function giohang()
+    {
+        return view('giohang');
+    }
+
+    public function xoagiohang($id)
+    {
+        $deleteItem = $this->cart->remove($id);
+        return redirect()->route('giohang');
+    }
+
+    public function capnhatgiohang(Request $request,$id,$qty)
+    {
+        if ($request->ajax()) {
+            
+            $itemData = array(
+                'rowid' => $id,
+                'qty'   => $qty
+            );
+            $updateItem = $this->cart->update($itemData);
+            echo $updateItem ? 'ok' : 'err';die;
+        }
+    }
+    
+    public function checkout(){
+        $_SESSION['sessCustomerID'] = 1;
+        $custRow = DB::table('customers')->where('id',$_SESSION['sessCustomerID'])->get()->first();
+        //print_r($custRow);
+        return view('checkout',compact('custRow'));
     }
 }

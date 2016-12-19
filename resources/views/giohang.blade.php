@@ -15,8 +15,11 @@ $cart = new App\Classes\Cart;
     input[type="number"]{width: 20%;}
     </style>
     <script>
+        var url = '{{asset('/')}}';
+    </script>
+    <script>
     function updateCartItem(obj,id){
-        $.get("cartAction.php", {action:"updateCartItem", id:id, qty:obj.value}, function(data){
+        $.get(url+"cap-nhat-gio-hang/"+id+'/'+obj.value, function(data){
             if(data == 'ok'){
                 location.reload();
             }else{
@@ -54,7 +57,7 @@ $cart = new App\Classes\Cart;
             <td><?php echo '$'.$item["subtotal"].' USD'; ?></td>
             <td>
                 <!--<a href="cartAction.php?action=updateCartItem&id=" class="btn btn-info"><i class="glyphicon glyphicon-refresh"></i></a>-->
-                <a href="cartAction.php?action=removeCartItem&id=<?php echo $item["rowid"]; ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="glyphicon glyphicon-trash"></i></a>
+                <a href="{{url('xoa-gio-hang',[$item['rowid']])}}" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="glyphicon glyphicon-trash"></i></a>
             </td>
         </tr>
         <?php } }else{ ?>
@@ -67,7 +70,7 @@ $cart = new App\Classes\Cart;
             <td colspan="2"></td>
             <?php if($cart->total_items() > 0){ ?>
             <td class="text-center"><strong>Total <?php echo '$'.$cart->total().' USD'; ?></strong></td>
-            <td><a href="checkout.php" class="btn btn-success btn-block">Checkout <i class="glyphicon glyphicon-menu-right"></i></a></td>
+            <td><a href="{{url('checkout')}}" class="btn btn-success btn-block">Checkout <i class="glyphicon glyphicon-menu-right"></i></a></td>
             <?php } ?>
         </tr>
     </tfoot>
